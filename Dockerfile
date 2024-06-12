@@ -57,6 +57,7 @@ RUN rm -rf /src
 
 #
 FROM ubuntu:jammy
+ARG TARGETPLATFORM
 LABEL org.opencontainers.image.title webrtcperf
 LABEL org.opencontainers.image.description WebRTC performance and quality evaluation tool.
 LABEL org.opencontainers.image.source https://github.com/vpalmisano/webrtcperf
@@ -165,22 +166,15 @@ RUN \
 #   apt-get update && apt-get install -y google-chrome-stable && apt-get clean
 
 # BUILD chromium-browser-unstable
-RUN \
-    mkdir -p /chromium && \
-    cd /chromium && \
-    wget -O build.sh https://raw.githubusercontent.com/rwolke/webrtcperf/devel/chromium/build.sh && \
-    wget -O max-video-decoders_main.patch https://raw.githubusercontent.com/rwolke/webrtcperf/devel/chromium/max-video-decoders_main.patch && \
-    chmod 755 build.sh && \
-    ./build.sh setup && \
-    ./build.sh apply_patch && \
-    ./build.sh build && \
-    dpkg -i ./chromium-browser-unstable*.deb && \
-    cd .. && \
-    rm -rf /chromium && \
-    rm -rf ${HOME}/chromium
+RUN ( \
+        [[ "${TARGETPLATFORM}" == "linux/amd64" ]] && \
+        curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-115.0.5782/chromium-browser-unstable_115.0.5782.0-1_amd64.deb" \
+    ) || ( \
+        [[ "${TARGETPLATFORM}" == "linux/arm64" ]] && \
+        curl -Lo /chromium-browser-unstable.deb "https://github.com/rwolke/webrtcperf/releases/download/chromium-115.0.5782/chromium-browser-unstable_115.0.5782.0-1_ard64.deb" \
+    )
 
-# RUN curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-125.0.6397.1/chromium-browser-unstable_125.0.6397.1-1_amd64.deb"
-# RUN dpkg -i /chromium-browser-unstable.deb && rm chromium-browser-unstable.deb
+    RUN dpkg -i /chromium-browser-unstable.deb && rm chromium-browser-unstable.deb
 
 RUN apt-get clean \
     && rm -rf /var/cache/apt/* \
