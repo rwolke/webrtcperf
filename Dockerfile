@@ -164,9 +164,15 @@ RUN \
 #   echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list; \
 #   apt-get update && apt-get install -y google-chrome-stable && apt-get clean
 
-# chromium-browser-unstable
-RUN curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-125.0.6397.1/chromium-browser-unstable_125.0.6397.1-1_amd64.deb"
-RUN dpkg -i /chromium-browser-unstable.deb && rm chromium-browser-unstable.deb
+# BUILD chromium-browser-unstable
+RUN cd chromium && \
+    ./build.sh setup && \
+    ./build.sh apply_patch && \
+    ./build.sh build && \
+    dpkg -i ./chromium-browser-unstable*.deb
+
+# RUN curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-125.0.6397.1/chromium-browser-unstable_125.0.6397.1-1_amd64.deb"
+# RUN dpkg -i /chromium-browser-unstable.deb && rm chromium-browser-unstable.deb
 
 RUN apt-get clean \
     && rm -rf /var/cache/apt/* \
