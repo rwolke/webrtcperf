@@ -165,7 +165,7 @@ RUN \
 #   apt-get update && apt-get install -y google-chrome-stable && apt-get clean
 
 # BUILD chromium-browser-unstable
-COPY chromium /chromium
+COPY ./chromium /chromium
 RUN \
     cd chromium && \
     ./build.sh setup && \
