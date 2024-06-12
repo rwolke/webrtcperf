@@ -165,15 +165,18 @@ RUN \
 #   apt-get update && apt-get install -y google-chrome-stable && apt-get clean
 
 # BUILD chromium-browser-unstable
-COPY ./chromium /chromium
 RUN \
-    cd chromium && \
+    mkdir -p /chromium && \
+    cd /chromium && \
+    wget -O build.sh https://raw.githubusercontent.com/rwolke/webrtcperf/devel/chromium/build.sh && \
+    wget -O max-video-decoders_main.patch https://raw.githubusercontent.com/rwolke/webrtcperf/devel/chromium/max-video-decoders_main.patch && \
+    chmod 755 build.sh && \
     ./build.sh setup && \
     ./build.sh apply_patch && \
     ./build.sh build && \
     dpkg -i ./chromium-browser-unstable*.deb && \
     cd .. && \
-    rm -rf chromium && \
+    rm -rf /chromium && \
     rm -rf ${HOME}/chromium
 
 # RUN curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-125.0.6397.1/chromium-browser-unstable_125.0.6397.1-1_amd64.deb"
