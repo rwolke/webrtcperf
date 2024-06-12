@@ -165,11 +165,14 @@ RUN \
 #   apt-get update && apt-get install -y google-chrome-stable && apt-get clean
 
 # BUILD chromium-browser-unstable
+COPY chromium chromium
 RUN cd chromium && \
     ./build.sh setup && \
     ./build.sh apply_patch && \
     ./build.sh build && \
-    dpkg -i ./chromium-browser-unstable*.deb
+    dpkg -i ./chromium-browser-unstable*.deb && \
+    cd .. && \
+    rm -rf chromium
 
 # RUN curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-125.0.6397.1/chromium-browser-unstable_125.0.6397.1-1_amd64.deb"
 # RUN dpkg -i /chromium-browser-unstable.deb && rm chromium-browser-unstable.deb
