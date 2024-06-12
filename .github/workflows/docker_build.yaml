@@ -82,7 +82,7 @@ jobs:
         context: .
         push: true
         tags: ghcr.io/${{ github.repository }}:devel
-        cache-from: type=local,src=/tmp/.buildx-cache
+#        cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new
 
     - name: Docker build and push new version
