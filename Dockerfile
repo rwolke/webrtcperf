@@ -167,10 +167,10 @@ RUN \
 
 # BUILD chromium-browser-unstable
 RUN ( \
-        [[ "${TARGETPLATFORM}" == "linux/amd64" ]] && \
+        [ "${TARGETPLATFORM}" == "linux/amd64" ] && \
         curl -Lo /chromium-browser-unstable.deb "https://github.com/vpalmisano/webrtcperf/releases/download/chromium-115.0.5782/chromium-browser-unstable_115.0.5782.0-1_amd64.deb" \
     ) || ( \
-        [[ "${TARGETPLATFORM}" == "linux/arm64" ]] && \
+        [ "${TARGETPLATFORM}" == "linux/arm64" ] && \
         curl -Lo /chromium-browser-unstable.deb "https://github.com/rwolke/webrtcperf/releases/download/chromium-115.0.5782/chromium-browser-unstable_115.0.5782.0-1_ard64.deb" \
     )
 
